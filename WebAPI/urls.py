@@ -16,4 +16,5 @@ urlpatterns = [
     path('book_log/viewall', views.book_log_viewall, name='Books_log'),
     path('book_log/viewone/<str:id>', views.book_log_viewone, name='Books_log'),
     path('book_log/add', views.book_log_add, name='Books_log'),
+    path('book_log/update/<int:id>', views.book_log_update, name='Books_log'),
 ]

@@ -16,4 +16,4 @@ class User_serializer(serializers.ModelSerializer):
 class Books_log_serializer(serializers.ModelSerializer):
     class Meta:
         model = Books_log
-        fields = ['date_issued','date_exp','date_returned']
+        fields = '__all__'

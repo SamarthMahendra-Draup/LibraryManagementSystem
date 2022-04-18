@@ -96,15 +96,15 @@ def users_delete(request, id):
 @api_view(['GET'])
 def book_log_viewall(request):
     book_logs = Books_log.objects.all()
-    serialzer = Books_Serializer(book_logs, many=True)
+    serialzer = Books_log_serializer(book_logs, many=True)
     return Response(serialzer.data)
 
 
 @api_view(['GET'])
 def book_log_viewone(request, id):
     users = User.objects.get(id=id)
-    book_logs = Books_log.get(user=users)
-    serialzer = Books_log_serializer(book_logs, many=False)
+    book_logs = Books_log.objects.filter(user=users)
+    serialzer = Books_log_serializer(book_logs, many=True)
     return Response(serialzer.data)
 
 
@@ -118,22 +118,19 @@ def book_log_add(request):
     serialzer = Books_log_serializer(data=bl)
     if serialzer.is_valid():
         serialzer.save()
-
     return Response(serialzer.data)
 
-'''
+
 @api_view(['POST'])
-def users_update(request, id):
-    users = User.objects.get(id=id)
-    serialzer = User_serializer(instance=users, data=request.data)
+def book_log_update(request, id):
+    books_log = Books_log.objects.get(id=id)
+    serialzer = Books_log_serializer(instance=books_log, data=request.data)
     if serialzer.is_valid():
         serialzer.save()
     return Response(serialzer.data)
 
-
 @api_view(['DELETE'])
 def users_delete(request, id):
-    users = User.objects.get(id=id)
-    users.delete()
+    bl = Books_log.objects.get(id=id)
+    bl.delete()
     return Response("Sucessfully Deleted ")
-    '''
