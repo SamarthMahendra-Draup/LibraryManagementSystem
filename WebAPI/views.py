@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import Books_Serializer, User_serializer ,Books_log_serializer
-from .models import Books, Books_log
+from .serializers import Books_Serializer, User_serializer, Books_log_serializer, Roles_serializer
+from .models import Books, Books_log , Roles
 from django.contrib.auth.models import User
 
 
@@ -90,7 +90,7 @@ def users_delete(request, id):
     users.delete()
     return Response("Sucessfully Deleted ")
 
-# Book-log function from here-----------------------------------------------------------------------------------------------
+# Book-log function from here-------------------------------------------------------------------------------------------
 
 
 @api_view(['GET'])
@@ -110,10 +110,10 @@ def book_log_viewone(request, id):
 
 @api_view(['POST'])
 def book_log_add(request):
-    data=request.data
+    data = request.data
     users = User.objects.get(id=int(data["user_id"]))
     books = Books.objects.get(book_id=str(data["book_id"]))
-    bl= Books_log(user=users,book=books)
+    bl = Books_log(user=users, book=books)
     bl.save()
     serialzer = Books_log_serializer(data=bl)
     if serialzer.is_valid():
@@ -129,8 +129,56 @@ def book_log_update(request, id):
         serialzer.save()
     return Response(serialzer.data)
 
+
 @api_view(['DELETE'])
 def users_delete(request, id):
     bl = Books_log.objects.get(id=id)
     bl.delete()
+    return Response("Sucessfully Deleted ")
+
+# roles function from here-----------------------------------------------------------------------------------------------
+
+
+@api_view(['GET'])
+def roles_viewall(request):
+    roles = Roles.objects.all()
+    serialzer = Roles_serializer(roles, many=True)
+    return Response(serialzer.data)
+
+@api_view(['GET'])
+def roles_viewone(request, id):
+    roles = Roles.objects.get(user_id=id)
+    serialzer = Roles_serializer(roles, many=False)
+    return Response(serialzer.data)
+
+
+@api_view(['POST'])
+def roles_add(request):
+    '''
+    data should be in format of {'user_id':1,'user_role':'student'}
+    :param request:
+    :return:
+    '''
+    data = request.data
+    user = User.objects.get(id=int(data['user_id']))
+    user_role = data['user_role']
+    rr = Roles(user_id=user,user_role=str(user_role))
+    rr.save()
+    serialzer = Roles_serializer(data=rr)
+    if serialzer.is_valid():
+        serialzer.save()
+    return Response(serialzer.data)
+
+@api_view(['POST'])
+def roles_update(request, id):
+    roles = Roles.objects.get(id=int(id))
+    serialzer = Roles_serializer(instance=roles, data=request.data)
+    if serialzer.is_valid():
+        serialzer.save()
+    return Response(serialzer.data)
+
+@api_view(['DELETE'])
+def roles_delete(request, id):
+    rr = Roles.objects.get(id=int(id))
+    rr.delete()
     return Response("Sucessfully Deleted ")

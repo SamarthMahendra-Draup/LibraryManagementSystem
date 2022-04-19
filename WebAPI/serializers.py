@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Books, Books_log
+from .models import Books, Books_log, Roles
 from django.contrib.auth.models import User
 
 
@@ -16,4 +16,9 @@ class User_serializer(serializers.ModelSerializer):
 class Books_log_serializer(serializers.ModelSerializer):
     class Meta:
         model = Books_log
+        fields = '__all__'
+
+class Roles_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Roles
         fields = '__all__'

@@ -20,3 +20,16 @@ class Books_log(models.Model):
     def __str__(self):
         return  str(self.user)
 
+class Roles(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    role_choices = [
+        ('ST', 'student'),
+        ('TCH', 'teacher'),
+        ('ADM', 'admin'),
+        ('LIB', 'librarian'),
+        ]
+    user_role = models.CharField(
+        max_length=5,
+        choices=role_choices,
+        default='ST')
+
