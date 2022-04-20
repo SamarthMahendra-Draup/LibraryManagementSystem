@@ -6,7 +6,6 @@ class Books(models.Model):
     book_id = models.CharField(max_length=50,primary_key=True)
     book_title = models.CharField(max_length=50,unique=True)
     author = models.CharField(max_length=50)
-    users = models.ManyToManyField(User, through='Books_log')
     def __str__(self):
         return self.book_title
 

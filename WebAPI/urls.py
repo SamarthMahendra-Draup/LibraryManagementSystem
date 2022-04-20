@@ -17,6 +17,7 @@ urlpatterns = [
     path('book_log/viewone/<str:id>', views.book_log_viewone, name='Books_log'),
     path('book_log/add', views.book_log_add, name='Books_log'),
     path('book_log/update/<int:id>', views.book_log_update, name='Books_log'),
+    path('book_log/delete', views.book_log_delete, name='Books_log'),
     path('roles/viewall', views.roles_viewall, name='Roles'),
     path('roles/viewone/<int:id>', views.roles_viewone, name='Roles'),
     path('roles/add', views.roles_add, name='Roles'),
