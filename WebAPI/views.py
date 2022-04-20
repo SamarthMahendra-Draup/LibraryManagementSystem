@@ -1,18 +1,22 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from .serializers import Books_Serializer, User_serializer, Books_log_serializer, Roles_serializer
 from .models import Books, Books_log , Roles
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def index(request):
-    return Response('Welcome to WebAPI')
+    username = request.user.username
+    return Response(f'Welcome to WebAPI {username}')
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def books_viewall(request):
     books = Books.objects.all()
     serialzer = Books_Serializer(books, many=True)
@@ -20,6 +24,7 @@ def books_viewall(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def books_viewone(request, id):
     books = Books.objects.get(book_id=id)
     serialzer = Books_Serializer(books, many=False)
@@ -27,6 +32,7 @@ def books_viewone(request, id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def books_add(request):
     serialzer = Books_Serializer(data=request.data)
     if serialzer.is_valid():
@@ -35,6 +41,7 @@ def books_add(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def books_update(request, id):
     books = Books.objects.get(book_id=id)
     serialzer = Books_Serializer(instance=books, data=request.data)
@@ -44,6 +51,7 @@ def books_update(request, id):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def books_delete(request, id):
     books = Books.objects.get(book_id=id)
     books.delete()
@@ -54,6 +62,7 @@ def books_delete(request, id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def users_viewall(request):
     users = User.objects.all()
     serialzer = User_serializer(users, many=True)
@@ -61,6 +70,7 @@ def users_viewall(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def users_viewone(request, username):
     users = User.objects.get(username=username)
     serialzer = User_serializer(users, many=False)
@@ -68,6 +78,7 @@ def users_viewone(request, username):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def users_add(request):
     serialzer = User_serializer(data=request.data)
     if serialzer.is_valid():
@@ -76,6 +87,7 @@ def users_add(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def users_update(request, id):
     users = User.objects.get(id=id)
     serialzer = User_serializer(instance=users, data=request.data)
@@ -85,6 +97,7 @@ def users_update(request, id):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def users_delete(request, id):
     users = User.objects.get(id=id)
     users.delete()
@@ -94,6 +107,7 @@ def users_delete(request, id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def book_log_viewall(request):
     book_logs = Books_log.objects.all()
     serialzer = Books_log_serializer(book_logs, many=True)
@@ -101,6 +115,7 @@ def book_log_viewall(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def book_log_viewone(request, id):
     users = User.objects.get(id=id)
     book_logs = Books_log.objects.filter(user=users)
@@ -109,6 +124,7 @@ def book_log_viewone(request, id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def book_log_add(request):
     data = request.data
     users = User.objects.get(id=int(data["user_id"]))
@@ -122,6 +138,7 @@ def book_log_add(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def book_log_update(request, id):
     books_log = Books_log.objects.get(id=id)
     serialzer = Books_log_serializer(instance=books_log, data=request.data)
@@ -131,6 +148,7 @@ def book_log_update(request, id):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def users_delete(request, id):
     bl = Books_log.objects.get(id=id)
     bl.delete()
@@ -140,12 +158,14 @@ def users_delete(request, id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def roles_viewall(request):
     roles = Roles.objects.all()
     serialzer = Roles_serializer(roles, many=True)
     return Response(serialzer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def roles_viewone(request, id):
     roles = Roles.objects.get(user_id=id)
     serialzer = Roles_serializer(roles, many=False)
@@ -153,6 +173,7 @@ def roles_viewone(request, id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def roles_add(request):
     '''
     data should be in format of {'user_id':1,'user_role':'student'}
@@ -170,6 +191,7 @@ def roles_add(request):
     return Response(serialzer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def roles_update(request, id):
     roles = Roles.objects.get(id=int(id))
     serialzer = Roles_serializer(instance=roles, data=request.data)
@@ -178,6 +200,7 @@ def roles_update(request, id):
     return Response(serialzer.data)
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def roles_delete(request, id):
     rr = Roles.objects.get(id=int(id))
     rr.delete()
