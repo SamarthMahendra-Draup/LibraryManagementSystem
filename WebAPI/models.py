@@ -13,9 +13,9 @@ class Books(models.Model):
 class Books_log(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Books, on_delete=models.CASCADE)
-    date_issued  = models.DateField(auto_now=True)
-    date_exp = models.DateField(auto_now=True)
-    date_returned = models.DateField(auto_now=True)
+    date_issued  = models.DateField()
+    date_exp = models.DateField()
+    date_returned = models.DateField(null=True)
     def __str__(self):
         return  str(self.user)
 
@@ -28,7 +28,7 @@ class Roles(models.Model):
         ('LIB', 'librarian'),
         ]
     user_role = models.CharField(
-        max_length=5,
+        max_length=10,
         choices=role_choices,
         default='ST')
 
