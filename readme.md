@@ -53,6 +53,8 @@ For users
         "last_name" : ".....", 
         "role" : "....."
     } 
+    ```
+
 * Update :
   * pass in your token and json object  in format 
   
@@ -65,9 +67,11 @@ For users
         "last_name" : "....." 
         "role" : "....."
     } 
+    ```
+    
 * Delete :
   * Pass the id in the url like delete/id 
-    ```
+    
     
 
 
