@@ -35,4 +35,20 @@ Books log stores user id and book id and isuued date and expected returned date 
 ### Authentication:
 For authentication, jwt authentication is used.
 
+For users 
+* Viewall :
+  * Just pass your jwt auth token and if you have permission to see the users.
+    You will be returned with all the users
+* Viewone :
+  * Pass the id in the url like viewone/id 
+* Add :
+  * pass in your token and json object  in format 
+  
+    ''' javascript
+    {
+        "username" : ".....",
+        "password" : ".....",
+    }'''
+
+
 
