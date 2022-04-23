@@ -44,11 +44,31 @@ For users
 * Add :
   * pass in your token and json object  in format 
   
-    ''' javascript
+    ```javascript
     {
         "username" : ".....",
         "password" : ".....",
-    } '''
+        "email" : ".....",
+        "first_name" : ".....",
+        "last_name" : ".....", 
+        "role" : "....."
+    } 
+* Update :
+  * pass in your token and json object  in format 
+  
+    ```javascript
+    {
+        "username" : ".....",
+        "password" : ".....",
+        "email" : ".....",
+        "first_name" : ".....",
+        "last_name" : "....." 
+        "role" : "....."
+    } 
+* Delete :
+  * Pass the id in the url like delete/id 
+    ```
+    
 
 
 
