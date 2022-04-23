@@ -28,6 +28,9 @@ Contains Following api's:
    * Add 
    * Update
    * Delete
+ * Caluclate fee
+
+Books log stores user id and book id and isuued date and expected returned date and user returned date, so based on number of days borrowed, fee is calculated.
  
 ### Authentication:
 For authentication, jwt authentication is used.
