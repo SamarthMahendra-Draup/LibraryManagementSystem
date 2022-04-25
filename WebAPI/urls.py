@@ -3,11 +3,11 @@ from . import views
 
 urlpatterns = [
     path('', views.Index.as_view(), name='index'),
-    path('books/viewall', views.books_viewall, name='Books'),
-    path('books/viewone/<str:id>', views.books_viewone, name='Books'),
-    path('books/add', views.books_add, name='Books'),
-    path('books/update/<str:id>', views.books_update, name='Books'),
-    path('books/delete/<str:id>', views.books_delete, name='Books'),
+    path('books/viewall', views.Booksviewall.as_view(), name='Books'),
+    path('books/viewone/<str:id>', views.Booksviewone.as_view(), name='Books'),
+    path('books/add', views.Booksadd.as_view(), name='Books'),
+    path('books/update/<str:id>', views.Booksupdate.as_view(), name='Books'),
+    path('books/delete/<str:id>', views.Booksdelete.as_view(), name='Books'),
     path('users/viewall', views.users_viewall, name='Users'),
     path('users/viewone/<str:un>', views.users_viewone, name='Users'),
     path('users/add', views.users_add, name='Users'),

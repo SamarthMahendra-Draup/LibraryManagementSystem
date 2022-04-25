@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import logout, login, authenticate
 from django.http import HttpResponse
 
+
 @api_view(['POST'])
 def login_view(request):
     username = request.data['username']
@@ -21,15 +22,14 @@ def login_view(request):
     if user is not None:
         login(request, user)
         return Response("Login sucessfull")
-
     else:
-       return Response("error logging you in ")
+        return Response("error logging you in ")
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
-    usern=request.user.username
+    usern = request.user.username
     logout(request)
     return Response(f"Sucessfully logged you out {usern}")
 
@@ -38,6 +38,7 @@ def logout_view(request):
 @permission_classes([IsAuthenticated])
 def current_user(request):
     return HttpResponse(request.user.username)
+
 
 def teacherauth(username):
     user = User.objects.get(username=username)
@@ -95,59 +96,64 @@ class Index(APIView):
         return Response(f'Your are not a teacher {username}')
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def books_viewall(request):
-    books = Books.objects.all()
-    serialzer = Books_Serializer(books, many=True)
-    return Response(serialzer.data)
+class Booksviewall(APIView):
+    permission_classes = (IsAuthenticated,)
 
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def books_viewone(request, id):
-    books = Books.objects.get(book_id=id)
-    serialzer = Books_Serializer(books, many=False)
-    return Response(serialzer.data)
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def books_add(request):
-    username = request.user.username
-    if libauth(username):
-        serialzer = Books_Serializer(data=request.data)
-        if serialzer.is_valid():
-            serialzer.save()
+    def get(self, request):
+        books = Books.objects.all()
+        serialzer = Books_Serializer(books, many=True)
         return Response(serialzer.data)
-    else:
-        return Response("Only librarian can add books")
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def books_update(request, id):
-    username = request.user.username
-    if libauth(username):
+class Booksviewone(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, id):
         books = Books.objects.get(book_id=id)
-        serialzer = Books_Serializer(instance=books, data=request.data)
-        if serialzer.is_valid():
-            serialzer.save()
+        serialzer = Books_Serializer(books, many=False)
         return Response(serialzer.data)
-    else:
-        return Response("Only librarian can add books")
 
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def books_delete(request, id):
-    username = request.user.username
-    if libauth(username):
-        books = Books.objects.get(book_id=id)
-        books.delete()
-        return Response("Sucessfully Deleted ")
-    else:
-        return Response("Only librarian can add books")
+class Booksadd(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        username = request.username
+        if libauth(username):
+            serializer = Books_Serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+            return Response(serializer.data)
+        else:
+            Response("Only librarian can add books")
+
+
+class Booksupdate(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, id):
+        username = request.user.username
+        if libauth(username):
+            books = Books.objects.get(book_id=id)
+            serialzer = Books_Serializer(instance=books, data=request.data)
+            if serialzer.is_valid():
+                serialzer.save()
+            return Response(serialzer.data)
+        else:
+            return Response("Only librarian can add books")
+
+
+class Booksdelete(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, id):
+        username = request.user.username
+        if libauth(username):
+            books = Books.objects.get(book_id=id)
+            books.delete()
+            return Response("Sucessfully Deleted ")
+        else:
+            return Response("Only librarian can add books")
 
 
 # User function from here-----------------------------------------------------------------------------------------------
@@ -218,7 +224,7 @@ def users_add(request):
         uuu = User.objects.get(username=un)
         rr = Roles(user_id=uuu, user_role=str(role))
         rr.save()
-        serialzer = User_serializer(uuu,many=False)
+        serialzer = User_serializer(uuu, many=False)
         return Response(serialzer.data)
     elif teacherauth(username):
         un = request.data['username']
@@ -228,7 +234,7 @@ def users_add(request):
         ls = request.data['last_name']
         role = request.data['role']
         if role == 'teacher' or role == 'student':
-            uu = User.objects.create_user(username=un, password=ps, email=em, first_name=fs, last_name=ls )
+            uu = User.objects.create_user(username=un, password=ps, email=em, first_name=fs, last_name=ls)
             uu.save()
             uuu = User.objects.get(username=un)
             rr = Roles(user_id=uuu, user_role=str(role))
@@ -247,11 +253,11 @@ def users_update(request, id):
     username = request.user.username
     if adminauth(username):
         users = User.objects.get(id=id)
-        users.username=request.data['username']
-        users.first_name=request.data['first_name']
-        users.last_name=request.data['last_name']
-        users.email=request.data['email']
-        users.password=request.data['password']
+        users.username = request.data['username']
+        users.first_name = request.data['first_name']
+        users.last_name = request.data['last_name']
+        users.email = request.data['email']
+        users.password = request.data['password']
         users.save()
         return Response("SUCESSFULLY UPDATED")
     else:
@@ -271,19 +277,20 @@ def users_delete(request, id):
 
 # Book-log function from here-------------------------------------------------------------------------------------------
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def calculatefee(request,id):
+def calculatefee(request, id):
     username = request.user.username
-    dd=0
+    dd = 0
     if libauth(username):
         book_logs = Books_log.objects.get(id=id)
-        if book_logs.date_returned != None:
-            dd= (book_logs.date_exp-book_logs.date_issued)
-            cc=dd.days*10
-            if book_logs.date_returned>book_logs.date_exp:
-                dd2= book_logs.date_returned-book_logs.date_exp
-                cc+=dd2.days*20
+        if book_logs.date_returned is not None:
+            dd = (book_logs.date_exp-book_logs.date_issued)
+            cc = dd.days*10
+            if book_logs.date_returned > book_logs.date_exp:
+                dd2 = book_logs.date_returned-book_logs.date_exp
+                cc += dd2.days*20
         return Response(f"fee :{cc}")
     else:
         return Response("Error")
@@ -325,7 +332,6 @@ def book_log_add(request):
         date_issued = request.data["date_issued"]
         date_exp = request.data["date_exp"]
         if "date_returned" in request.data:
-            date_returned = request.data["data_returned"]
             bl = Books_log(user=users, book=books, date_issued=date_issued, date_exp=date_exp, date_returned=request.data["date_returned"])
         else:
             bl = Books_log(user=users, book=books, date_issued=date_issued, date_exp=date_exp)
@@ -344,7 +350,7 @@ def book_log_update(request, id):
     username = request.user.username
     if libauth(username):
         books_log = Books_log.objects.get(id=id)
-        books_log.date_returned= request.data["date_returned"]
+        books_log.date_returned = request.data["date_returned"]
         books_log.save()
         return Response("Updated")
     else:
