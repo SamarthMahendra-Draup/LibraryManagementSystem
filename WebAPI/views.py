@@ -97,8 +97,7 @@ class Index(APIView):
 
 
 class Booksviewall(APIView):
-    permission_classes = (IsAuthenticated,)
-
+    #permission_classes = (IsAuthenticated,)
     def get(self, request):
         books = Books.objects.all()
         serialzer = Books_Serializer(books, many=True)
